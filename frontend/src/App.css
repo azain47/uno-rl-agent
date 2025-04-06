@@ -1,0 +1,601 @@
+/* Perspective styling for the discard pile */
+.discard-pile {
+  perspective: 500px;
+  z-index: 10;
+}
+
+.discard-pile > div {
+  transform: rotateZ(2deg);
+  margin-right: -15px;
+  transition: all 0.2s ease-out;
+}
+
+.discard-pile > div:nth-child(2n) {
+  transform: rotateZ(-2deg);
+}
+
+.discard-pile > div:hover {
+  transform: translateY(-2px) rotateZ(0);
+  z-index: 10;
+}
+
+/* Card Play Animations */
+@keyframes playFromHand {
+  0% { 
+    transform: translate(-50%, 0) scale(1); 
+    opacity: 1;
+    z-index: 50;
+    bottom: 150px; /* Start near player hand */
+    left: 50%;
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(0.8) rotate(var(--random-rotation));
+    opacity: 0;
+    z-index: 50;
+    bottom: 50%; /* Center vertically */
+    left: 50%;
+  }
+}
+
+@keyframes playFromAgent {
+  0% { 
+    transform: translate(-50%, 0) scale(1);
+    opacity: 1;
+    z-index: 50;
+    top: 60px;
+    left: 50%;
+  }
+  100% { 
+    transform: translate(-50%, -50%) scale(0.8) rotate(var(--random-rotation));
+    opacity: 0;
+    z-index: 50;
+    top: 50%;
+    left: 50%;
+  }
+}
+
+@keyframes appearInPile {
+  0% { 
+    transform: scale(0.8) rotate(var(--random-rotation)); 
+    opacity: 0;
+  }
+  100% { 
+    transform: scale(1) rotate(var(--random-rotation)); 
+    opacity: 1;
+  }
+}
+
+.card-playing-from-hand {
+  position: absolute;
+  --random-rotation: 0deg;
+  animation: playFromHand 0.5s ease-out forwards;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0;
+}
+
+.card-playing-from-agent {
+  position: absolute;
+  --random-rotation: 0deg;
+  animation: playFromAgent 0.7s ease-out forwards;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.card-appearing-in-pile {
+  --random-rotation: 0deg;
+  animation: appearInPile 0.3s ease-out forwards;
+  animation-delay: 0.65s;
+  opacity: 0;
+}
+
+/* App-specific styles */
+
+/* Main Game Container */
+.uno-game-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 1400px; /* Slightly wider max width */
+  margin: 0 auto;
+  padding: 1.5rem; /* Increased base padding */
+  gap: 1.5rem; /* Gap between header/content */
+}
+
+/* Game Header */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid hsl(var(--border));
+}
+
+.game-header h1 {
+  font-size: 1.75rem; /* Larger title */
+  font-weight: 600;
+}
+
+.game-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* Slightly larger gap */
+}
+
+/* Turn indicator and action messages */
+.turn-indicator {
+  position: absolute;
+  top: 1.5rem; /* More padding */
+  left: 1.5rem;
+  transform: none;
+  background-color: hsl(var(--background)); /* Use main background */
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-weight: 600; /* Bolder */
+  z-index: 10;
+  box-shadow: var(--shadow-md);
+}
+
+.action-message {
+  position: fixed;
+  bottom: 1.5rem; /* Match toggle button */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+  border-radius: var(--radius);
+  padding: 0.6rem 1.2rem;
+  font-weight: 500;
+  z-index: 20;
+  box-shadow: var(--shadow-md);
+  animation: fadeInOut 3s forwards;
+  text-align: center;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translate(-50%, 20px); }
+  10% { opacity: 1; transform: translate(-50%, 0); }
+  80% { opacity: 1; transform: translate(-50%, 0); }
+  100% { opacity: 0; transform: translate(-50%, -20px); }
+}
+
+/* Game Table Layout */
+.game-table {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: relative;
+  background-color: transparent; /* Let container handle background */
+  border-radius: 0; /* Remove table border-radius */
+  box-shadow: none; /* Remove table shadow */
+  gap: 1.5rem; /* Gap between game areas */
+}
+
+/* Opponent Area (Top) */
+.opponent-area {
+  padding: 1.5rem;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md); /* Consistent shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 200px; /* Consistent min height */
+}
+
+.opponent-cards-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  perspective: 1000px;
+  padding: 1rem 0;
+}
+
+.opponent-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.card-count {
+  background-color: hsl(var(--muted)); /* Muted background for count */
+  color: hsl(var(--muted-foreground));
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.opponent-cards {
+  position: relative;
+  height: 8.5rem; /* Slightly taller */
+  width: 100%;
+  max-width: 90%;
+  margin-top: 0.5rem;
+}
+
+.opponent-card {
+  width: 6rem; /* Slightly larger */
+  height: 8.5rem;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform-origin: bottom center;
+  transition: transform 0.2s ease-out;
+}
+
+.opponent-card:hover {
+  transform: translate(-50%, -10px) rotate(var(--hover-rotate, 0deg)); /* Add slight rotation on hover */
+  z-index: 20;
+}
+
+.card-back {
+  width: 100%;
+  height: 100%;
+  background-color: #ED1C24; /* Keep UNO Red */
+  border: 3px solid white;
+  border-radius: 0.5rem; /* Slightly larger radius */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  background-image: none; /* Remove gradient */
+  position: relative;
+  overflow: hidden; /* Hide pseudo-elements overflow */
+}
+
+.card-back::before {
+  content: "UNO";
+  position: absolute;
+  font-size: 1.5rem; /* Larger UNO text */
+  font-weight: 900;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  transform: rotate(-30deg) scale(1.1);
+  opacity: 0.8;
+}
+
+.opponent-card-count-indicator {
+  background-color: hsl(var(--card));
+  color: hsl(var(--muted-foreground));
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius);
+  font-size: 0.8rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  text-align: center;
+  position: relative;
+  z-index: 15;
+}
+
+/* Game Board (Middle) */
+.game-board {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1.5rem; /* Reduced padding */
+  min-height: 220px; /* Reduced min-height */
+  background-color: hsl(var(--card) / 0.5);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+}
+
+/* Processing Indicator */
+.processing-indicator {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: hsla(var(--foreground) / 0.7);
+  color: hsl(var(--background));
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 500;
+  z-index: 35;
+  pointer-events: none;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.color-indicator {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  padding: 0.3rem 1rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 2px solid white; /* White border */
+  box-shadow: var(--shadow-sm);
+  text-transform: uppercase;
+}
+
+.color-red { background-color: #D91F26; color: white; }
+.color-green { background-color: #55A64F; color: white; }
+.color-blue { background-color: #006CB7; color: white; }
+.color-yellow { background-color: #FFDA00; color: black; }
+.color-wild { background: linear-gradient(45deg, #D91F26, #FFDA00, #55A64F, #006CB7); color: white; text-shadow: 1px 1px 1px #000; }
+
+.discard-pile-area {
+  perspective: 800px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 120px; /* Larger pile area */
+  height: 170px;
+  position: relative;
+  z-index: 5;
+}
+
+/* Discard pile outline removed - rely on UnoCard component visual */
+.discard-pile-area::before {
+  display: none;
+}
+
+/* Player Area (Bottom) */
+.player-area {
+  padding: 1.5rem;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md); /* Consistent shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 230px; /* Slightly more for player */
+  position: relative;
+}
+
+/* Style player area heading */
+.player-area h3 {
+  font-size: 1.25rem; /* Consistent size */
+  font-weight: 600;
+  color: hsl(var(--foreground));
+  margin-bottom: 1rem; /* Consistent margin */
+  text-align: center; /* Center headings */
+  width: 100%;
+}
+
+/* Container for hand and draw button */
+.hand-container {
+  width: 100%;
+  max-width: 90%; /* Wider max width */
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Center items vertically */
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Styles for the actual hand display */
+.hand.player-hand {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem; /* Slightly more gap */
+  padding-bottom: 0.5rem;
+  flex-grow: 1;
+  max-width: calc(100% - 160px); /* Adjusted for button */
+  min-height: 110px;
+}
+
+/* Styling for individual cards (if UnoCard needs targeting) */
+.player-hand > .uno-card {
+  /* Target UnoCard component if needed */
+  /* transition: transform 0.2s ease-out; - Handled by UnoCard? */
+}
+
+/* Draw Card Button Area */
+.draw-card-button {
+  flex-shrink: 0;
+}
+
+.draw-button {
+  @apply h-11 px-6; /* Consistent button sizing */
+}
+
+.empty-hand-message,
+.loading-message {
+  color: hsl(var(--muted-foreground));
+  min-height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  font-style: italic;
+}
+
+/* Color Chooser */
+.color-chooser {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: hsl(var(--background));
+  padding: 1.5rem;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--border));
+  box-shadow: var(--shadow-lg); /* Larger shadow */
+  z-index: 30;
+  text-align: center;
+}
+
+.color-chooser p {
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.color-chooser-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+/* Winner Message */
+.winner-message {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 40;
+  padding: 2rem 4rem;
+  background-color: hsl(var(--background));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-xl);
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  animation: winnerAppear 0.5s ease-out forwards;
+}
+
+.winner-message.human {
+  border: 4px solid hsl(var(--primary));
+  color: hsl(var(--primary));
+}
+
+.winner-message.agent {
+  border: 4px solid hsl(var(--destructive));
+  color: hsl(var(--destructive));
+}
+
+@keyframes winnerAppear {
+  from { opacity: 0; transform: translate(-50%, -40%) scale(0.9); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .uno-game-container {
+    padding: 1rem;
+  }
+  .game-header h1 {
+    font-size: 1.5rem;
+  }
+  .hand.player-hand {
+    max-width: 100%; /* Allow hand to take full width */
+    justify-content: center;
+  }
+  .hand-container {
+    flex-direction: column; /* Stack hand and button */
+    align-items: center;
+    gap: 1rem;
+  }
+  .draw-card-button {
+    margin-top: 0.5rem;
+  }
+  .agent-log-panel.floating {
+    width: calc(100% - 2rem); /* Full width on mobile */
+    bottom: 4.5rem;
+    right: 1rem;
+    max-height: 300px;
+  }
+  .log-toggle-button {
+    bottom: 1rem;
+    right: 1rem;
+  }
+}
+
+.agent-turn-button {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+}
+
+.agent-thinking-indicator {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  background-color: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* Log Panel Styles (Floating) */
+.agent-log-panel.floating {
+  position: fixed;
+  bottom: 5rem; /* Adjusted position */
+  right: 1.5rem;
+  width: 340px;
+  max-height: 450px;
+  background-color: hsl(var(--card)); /* Use card background */
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+}
+
+.log-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  background-color: hsl(var(--muted)); /* Muted title background */
+  flex-shrink: 0;
+}
+
+.log-entries {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0.75rem 1.25rem;
+}
+
+.log-entry {
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed hsl(var(--border) / 0.4);
+  font-family: monospace;
+  font-size: 0.875rem;
+}
+
+.log-entry:last-child {
+  border-bottom: none;
+}
+
+.log-entry.placeholder {
+  font-style: italic;
+  color: hsl(var(--muted-foreground));
+  text-align: center;
+  padding: 2rem;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.log-toggle-button {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 60;
+  box-shadow: var(--shadow-md);
+  @apply w-12 h-12; /* Larger icon button */
+} 

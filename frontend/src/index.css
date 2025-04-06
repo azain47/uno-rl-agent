@@ -1,0 +1,196 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Updated Forest Green Color Scheme */
+@layer base {
+  :root {
+    --background: 48 33% 97%; /* Very light beige */
+    --foreground: 90 25% 15%; /* Dark desaturated green */
+    
+    --muted: 90 20% 94%; /* Light gray-green */
+    --muted-foreground: 90 10% 40%; /* Medium gray-green */
+    
+    --popover: 45 40% 98%; /* Light beige */
+    --popover-foreground: 90 25% 15%;
+    
+    --card: 45 40% 98%; /* Light beige */
+    --card-foreground: 90 25% 15%;
+    
+    --border: 90 15% 88%; /* Light gray-green border */
+    --input: 90 15% 88%;
+    
+    --primary: 140 40% 45%; /* Forest green */
+    --primary-foreground: 50 100% 98%; /* Very light yellow/white */
+    
+    --secondary: 130 20% 92%; /* Light minty green */
+    --secondary-foreground: 140 40% 30%; /* Darker green */
+    
+    --accent: 130 20% 92%;
+    --accent-foreground: 140 40% 30%;
+    
+    --destructive: 0 60% 50%; /* Standard red */
+    --destructive-foreground: 0 0% 98%;
+    
+    --ring: 140 40% 55%; /* Slightly lighter green for ring */
+    
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 120 15% 10%; /* Very dark green */
+    --foreground: 50 30% 90%; /* Light beige/off-white */
+    
+    --muted: 120 10% 18%; /* Darker gray-green */
+    --muted-foreground: 110 10% 65%; /* Lighter gray-green */
+    
+    --popover: 120 15% 8%; /* Very dark popover */
+    --popover-foreground: 50 30% 90%;
+    
+    --card: 120 12% 14%; /* Dark card background */
+    --card-foreground: 50 30% 90%;
+    
+    --border: 120 8% 25%; /* Dark border */
+    --input: 120 8% 25%;
+    
+    --primary: 145 45% 55%; /* Brighter green */
+    --primary-foreground: 140 100% 10%; /* Dark green text on primary */
+    
+    --secondary: 120 10% 25%; /* Darker secondary */
+    --secondary-foreground: 50 30% 90%;
+    
+    --accent: 120 10% 25%;
+    --accent-foreground: 50 30% 90%;
+    
+    --destructive: 0 65% 55%; /* Slightly brighter red */
+    --destructive-foreground: 0 0% 98%;
+    
+    --ring: 145 45% 60%; /* Slightly lighter green ring */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+  h1 {
+    @apply text-3xl font-bold;
+  }
+  h2 {
+    @apply text-2xl font-semibold;
+  }
+}
+
+/* UNO Game specific styles */
+@layer components {
+  .game-area {
+    @apply container flex flex-col items-center gap-6 px-4 py-8 mx-auto;
+  }
+
+  .player-area,
+  .agent-area,
+  .discard-area {
+    @apply w-full bg-card/60 rounded-lg p-6 text-center border border-border/30 shadow-lg;
+  }
+
+  .player-hand {
+    @apply flex flex-wrap justify-center items-center gap-3 mt-4 min-h-[150px];
+  }
+
+  .discard-pile {
+    @apply flex justify-center items-center mt-4 min-h-[80px];
+  }
+
+  .status-message {
+    @apply mt-4 text-base min-h-[2em] text-left;
+  }
+
+  .status-message strong {
+    @apply text-blue-400 font-bold;
+  }
+
+  .color-chooser {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .color-chooser-buttons {
+    @apply flex flex-wrap justify-center gap-2 mt-2;
+  }
+
+  .winner-message {
+    @apply text-2xl font-bold my-5 p-6 rounded-lg text-center w-full;
+  }
+
+  .winner-message.human {
+    @apply bg-uno-green text-white shadow-lg shadow-uno-green/50;
+  }
+
+  .winner-message.agent {
+    @apply bg-uno-red text-white shadow-lg shadow-uno-red/50;
+  }
+
+  .start-game-controls {
+    @apply flex flex-col sm:flex-row items-center justify-center gap-4 p-6 bg-card/60 rounded-lg border border-border/30;
+  }
+}
+
+/* For larger screens, use grid */
+@media (min-width: 1024px) {
+  .game-area {
+    @apply grid grid-cols-2 grid-rows-[auto_auto];
+    grid-template-areas:
+      "agent discard"
+      "player player";
+    @apply gap-8 items-start;
+  }
+
+  .agent-area {
+    grid-area: agent;
+    @apply relative pb-16;
+  }
+
+  .discard-area {
+    grid-area: discard;
+  }
+
+  .player-area {
+    grid-area: player;
+  }
+
+  .status-message {
+    @apply absolute bottom-6 left-6 w-[calc(100%-3rem)] m-0;
+  }
+
+  .start-game-controls,
+  .winner-message {
+    @apply col-span-2 justify-self-center w-auto;
+  }
+}
+
+/* Remove default Vite light mode overrides if desired,
+   or enhance them further */
+/*
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+  .game-info, .player-area, .agent-area, .discard-area {
+     background-color: #f0f0f0;
+  }
+}
+*/ 
