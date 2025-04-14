@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import axios from 'axios';
 import { Button } from './components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './components/ui/select';
 import { ThemeToggle } from './components/ui/theme-toggle';
 import UnoCard from './components/UnoCard';
 import './App.css';
@@ -400,15 +399,19 @@ function App() {
     animatingAgentCards.length > 0;
 
   return (
-    <div className="uno-game-container">
+    <div className="uno-game-container gap-1">
       <ThemeToggle />
       
       <header className="game-header">
-        <h1>UNO AI Game</h1>
-        <div className="game-controls">
+        <h1 className="text-center">UNO AI Game</h1>
+      </header>
+
+      <div className="game-controls flex justify-center">
           {gameStarted ? (
-            <>
-              <Button onClick={startGame} disabled={loading} variant="outline" size="sm">
+            <div className="ingame-buttons flex gap-4 m-2">
+              <Button onClick={startGame} disabled={loading} 
+              variant="outline" 
+              size="sm">
                 New Game
               </Button>
               <Button 
@@ -420,35 +423,43 @@ function App() {
               >
                 🔄
               </Button>
-            </>
+            </div>
           ) : (
-            <div className="start-game-container">
+            <div className="start-game-container mt-4">
               <div className="start-game-controls">
-                <div className="flex items-center space-x-2">
-                  <label htmlFor="difficulty" className="font-medium">Difficulty:</label>
-                  <Select 
-                    value={difficulty.toString()} 
-                    onValueChange={(val) => setDifficulty(parseInt(val, 10))}
+                <div className="difficulty-selector">
+                  <Button 
+                    onClick={() => setDifficulty(1)}
+                    variant={difficulty === 1 ? 'secondary' : 'outline'}
+                    size="xl"
+                    className="text-xl"
                   >
-                    <SelectTrigger className="w-36">
-                      <SelectValue placeholder="Select difficulty" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">Easy</SelectItem>
-                      <SelectItem value="2">Medium</SelectItem>
-                      <SelectItem value="3">Hard</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    EASY
+                  </Button>
+                  <Button 
+                    onClick={() => setDifficulty(2)}
+                    variant={difficulty === 2 ? 'secondary' : 'outline'}
+                    size="xl"
+                    className="text-xl"                    
+                  >
+                    MEDIUM
+                  </Button>
+                  <Button 
+                    onClick={() => setDifficulty(3)}
+                    variant={difficulty === 3 ? 'secondary' : 'outline'}
+                    size="xl"
+                    className="text-xl"
+                  >
+                    HARD
+                  </Button>
                 </div>
-                <Button onClick={startGame} disabled={loading} className="start-game-button">
+              </div>
+              <Button onClick={startGame} disabled={loading} className="start-game-button font-extrabold uppercase text-xl mt-6 text-justify" size="xl">
                   Start New Game
                 </Button>
-              </div>
             </div>
           )}
         </div>
-      </header>
-
       {error && <div className="text-red-500 font-medium mt-2 text-center p-2">{error}</div>}
       
       {actionMessage && (
@@ -462,9 +473,9 @@ function App() {
         <div className="game-table">
           {/* Winner Display */} 
           {gameState.winner && (
-             <div className={`winner-message ${gameState.winner}`}>
+              <div className={`winner-message ${gameState.winner}`}>
                 Game Over! Winner: {gameState.winner.toUpperCase()}
-             </div>
+              </div>
           )}
 
           {/* Agent's Area (top) */}
